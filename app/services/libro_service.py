@@ -123,3 +123,6 @@ class LibroService:
                 detail=f"No se encontro ningun libro con el ID: {libro_id}"
             )
         return etiquetas_info
+
+# Validated ObjectId and ISBN uniqueness constraint
+

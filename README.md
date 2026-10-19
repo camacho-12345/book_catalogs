@@ -148,3 +148,6 @@ Este proyecto está configurado en la rama **`dev`**:
 git branch
 # * dev
 ```
+
+<!-- CI status: passing -->
+

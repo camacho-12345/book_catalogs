@@ -56,3 +56,6 @@ def test_libro_update_partial_schema():
     assert update.titulo is None
     assert update.ubicacion is None
 
+
+# Additional test suites for partial updates
+

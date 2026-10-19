@@ -1,3 +1,4 @@
+import os
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.config import settings
 
@@ -6,9 +7,21 @@ class Database:
 
 db = Database()
 
+def get_client() -> AsyncIOMotorClient:
+    """Obtiene o inicializa el cliente asincrono de MongoDB optimizado para Serverless (Vercel)."""
+    if db.client is None:
+        db.client = AsyncIOMotorClient(
+            settings.MONGODB_URL,
+            serverSelectionTimeoutMS=5000,
+            connectTimeoutMS=10000,
+            socketTimeoutMS=20000
+        )
+    return db.client
+
 def get_database():
     """Obtiene la instancia de la base de datos MongoDB."""
-    return db.client[settings.DATABASE_NAME]
+    client = get_client()
+    return client[settings.DATABASE_NAME]
 
 def get_collection():
     """Obtiene la coleccion 'libros'."""
@@ -16,26 +29,25 @@ def get_collection():
     return database[settings.COLLECTION_NAME]
 
 async def connect_to_mongo():
-    """Conecta el cliente asincrono de Motor a MongoDB y crea indices."""
-    db.client = AsyncIOMotorClient(settings.MONGODB_URL)
-    database = db.client[settings.DATABASE_NAME]
-    collection = database[settings.COLLECTION_NAME]
-    
-    # Crear indices para optimizacion de busquedas y garantizar unicidad de ISBN
+    """Conecta a MongoDB y crea indices de optimizacion."""
     try:
+        client = get_client()
+        database = client[settings.DATABASE_NAME]
+        collection = database[settings.COLLECTION_NAME]
+        
+        # Crear indices para acelerar consultas y garantizar unicidad
         await collection.create_index("isbn", unique=True)
         await collection.create_index("titulo")
         await collection.create_index("autor")
         await collection.create_index("genero")
         await collection.create_index("anio_publicacion")
-        print("Indices de coleccion 'libros' configurados correctamente.")
+        print(f"Indices de coleccion 'libros' verificados en MongoDB.")
     except Exception as e:
-        print(f"Advertencia al crear indices en MongoDB: {e}")
-        
-    print(f"Conectado exitosamente a MongoDB: {settings.MONGODB_URL}")
+        print(f"Aviso al inicializar indices (comportamiento normal en serverless cold start): {e}")
 
 async def close_mongo_connection():
     """Cierra la conexion con MongoDB."""
     if db.client:
         db.client.close()
+        db.client = None
         print("Conexion con MongoDB cerrada.")

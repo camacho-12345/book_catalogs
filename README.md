@@ -141,13 +141,40 @@ docker-compose up --build
 
 ---
 
-## 🌿 Flujo Git
+## ☁️ Despliegue en Vercel con MongoDB Atlas / Storage
 
-Este proyecto está configurado en la rama **`dev`**:
+La API cuenta con configuración nativa para **Vercel Serverless Functions** (`vercel.json` y `api/index.py`).
+
+### 1. Configurar MongoDB en la Nube (MongoDB Atlas o Vercel Storage)
+1. Crea una cuenta gratuita en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+2. Crea un clúster gratuito (M0 Sandbox).
+3. En **Database Access**, crea un usuario con contraseña.
+4. En **Network Access**, permite el acceso desde cualquier lugar (`0.0.0.0/0`) para que las funciones serverless de Vercel puedan conectarse.
+5. En **Connect > Drivers (Python)**, copia tu cadena de conexión URI:
+   ```text
+   mongodb+srv://<usuario>:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
+   ```
+
+### 2. Desplegar en Vercel
+#### Opción A: Desde el panel de Vercel (Recomendado)
+1. Ve a [vercel.com](https://vercel.com/) e inicia sesión con tu cuenta de GitHub.
+2. Haz clic en **Add New... > Project** e importa el repositorio `camacho-12345/book_catalogs`.
+3. En la sección **Environment Variables**, añade:
+   - `MONGODB_URL`: Tu cadena de conexión `mongodb+srv://...`
+   - `DATABASE_NAME`: `catalogo_libros_db`
+   - `COLLECTION_NAME`: `libros`
+4. Haz clic en **Deploy**.
+
+#### Opción B: Usando Vercel CLI
 ```bash
-git branch
-# * dev
+npx vercel
+```
+Sigue las indicaciones en consola y configura las variables de entorno con:
+```bash
+npx vercel env add MONGODB_URL
 ```
 
-<!-- CI status: passing -->
+- **Swagger UI en Vercel:** `https://tu-proyecto.vercel.app/docs`
+- **Health Check:** `https://tu-proyecto.vercel.app/`
+
 

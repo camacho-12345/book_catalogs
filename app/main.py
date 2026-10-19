@@ -43,6 +43,9 @@ async def root():
     return {
         "status": "online",
         "app": settings.APP_NAME,
+        "environment": settings.APP_ENV,
         "docs": "/docs",
+        "redoc": "/redoc",
+        "database": settings.DATABASE_NAME,
         "version": "1.0.0"
     }

@@ -1,4 +1,5 @@
 {
+  "name": "book-catalogs",
   "version": 2,
   "builds": [
     {

@@ -11,11 +11,11 @@ class Settings(BaseSettings):
     HOST: str = os.getenv("HOST", "0.0.0.0")
 
     # MongoDB Atlas / Vercel Storage
-    # Soporta multiples aliases comunmente provistos por Vercel Integrations y MongoDB Atlas
+    # Soporta multiples aliases (MONGODB_URI es el inyectado automaticamente por Vercel)
     MONGODB_URL: str = (
-        os.getenv("MONGODB_URL")
+        os.getenv("MONGODB_URI")
+        or os.getenv("MONGODB_URL")
         or os.getenv("MONGO_URI")
-        or os.getenv("MONGODB_URI")
         or os.getenv("DATABASE_URL")
         or "mongodb://localhost:27017"
     )

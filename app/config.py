@@ -23,3 +23,6 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+# Supported Atlas and localized MongoDB URI aliases
+

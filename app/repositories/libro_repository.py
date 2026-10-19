@@ -138,3 +138,6 @@ class LibroRepository:
             }
         except InvalidId:
             return None
+
+# ReDoS prevention applied to all regex filters
+
